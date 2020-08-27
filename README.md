@@ -9,9 +9,9 @@ This app manage recursive task in a educational center, with this applicaction w
 
 # Technology
 * BackOffice:
-** Framework: SpringBoot e Hibernate
-** Database: PostgreSQL
-** Logging: Log4j y ELK Stack
-** Monitoring: Prometheus y grafana
+    * Framework: SpringBoot e Hibernate
+    * Database: PostgreSQL
+    * Logging: Log4j y ELK Stack
+    * Monitoring: Prometheus y grafana
 * FrontEnd:
-** ReactJs
+    * ReactJs

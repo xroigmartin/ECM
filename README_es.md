@@ -11,9 +11,9 @@ Esta es una aplicación para gestionar las tareas recurrentes en un centro educa
 Para realizar esta aplicación se han utilizado las tecnologias siguientes:
 
 * BackOffice:
-** Framework: SpringBoot e Hibernate
-** Base de datos: PostgreSQL
-** Logging: Log4j y ELK Stack
-** Monitoring: Prometheus y grafana
+  * Framework: SpringBoot e Hibernate
+  * Base de datos: PostgreSQL
+  * Logging: Log4j y ELK Stack
+  * Monitoring: Prometheus y grafana
 * FrontEnd:
-** ReactJs
+  * ReactJs
