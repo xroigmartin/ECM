@@ -1,0 +1,7 @@
+version: '3.8'
+
+services:
+  ecm:
+    image: "xroigmartin/ecm:0.0.1-SNAPSHOT"
+    ports: 
+      - "9090:8080"  

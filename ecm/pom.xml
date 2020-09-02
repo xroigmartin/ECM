@@ -17,6 +17,8 @@
 
 	<properties>
 		<java.version>14</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<docker.image.prefix>ecm</docker.image.prefix>
 	</properties>
 
 	<dependencies>
@@ -55,6 +57,27 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<version>1.4.13</version>
+				<executions>
+					<execution>
+						<id>build-image</id>
+						<phase>package</phase>
+						<goals>
+							<goal>build</goal>
+						</goals>
+						<configuration>
+							<repository>xroigmartin/ecm</repository>
+							<tag>${project.version}</tag>
+							<buildArgs>
+								<JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
+							</buildArgs>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
