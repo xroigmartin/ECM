@@ -46,7 +46,7 @@ services:
     volumes:
       #Ruta de los logs que tiene que enviar
       - ecm_logs_volume:/var/lib/docker/containers/logs/:ro
-      - .filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml
     command: ['--strict.perms=false']
     depends_on: 
       - elasticsearch
@@ -63,6 +63,22 @@ services:
       - ecm_network
     ports:
       - 9090:9090
+  
+  grafana:
+    image: grafana/grafana:master
+    container_name: grafana_ecm
+    ports:
+      - 3000:3000
+    volumes:
+      - "./var/grafana/grafana_data:/var/lib/grafana"
+      - "./etc/grafana/provisioning:/etc/grafana/provisioning/"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=foobar
+      - GF_USERS_ALLOW_SIGN_UP=false
+    networks:
+      - ecm_network
+    depends_on:
+      - prometheus
 
 volumes: 
   ecm_logs_volume:
