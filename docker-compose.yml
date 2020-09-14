@@ -3,10 +3,13 @@ version: '3.8'
 services:
   ecm:
     image: "xroigmartin/ecm:0.0.1-SNAPSHOT"
+    container_name: ecm
     ports: 
-      - "9090:8080"
+      - "9080:8080"
     volumes:
       - ecm_logs_volume:/logs/
+    networks:
+      - ecm_network
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1-amd64
@@ -50,10 +53,23 @@ services:
     networks: 
       - ecm_network
 
+  prometheus:
+    image: prom/prometheus:v2.21.0
+    container_name: prometheus_ecm
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_ecm_data_volume:/prometheus
+    networks:
+      - ecm_network
+    ports:
+      - 9090:9090
+
 volumes: 
   ecm_logs_volume:
     driver: local
   elastic_ecm_data_volumne:
+    driver: local
+  prometheus_ecm_data_volume:
     driver: local
 
 networks: 
