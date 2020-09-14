@@ -67,6 +67,7 @@ services:
   grafana:
     image: grafana/grafana:master
     container_name: grafana_ecm
+    user: root
     ports:
       - 3000:3000
     volumes:
