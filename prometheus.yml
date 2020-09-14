@@ -1,0 +1,14 @@
+#Global configurations
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  - job_name: 'ecm'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['ecm:8080']
+  
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']

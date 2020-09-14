@@ -3,10 +3,13 @@ version: '3.8'
 services:
   ecm:
     image: "xroigmartin/ecm:0.0.1-SNAPSHOT"
+    container_name: ecm
     ports: 
-      - "9090:8080"
+      - "9080:8080"
     volumes:
       - ecm_logs_volume:/logs/
+    networks:
+      - ecm_network
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1-amd64
@@ -43,17 +46,59 @@ services:
     volumes:
       #Ruta de los logs que tiene que enviar
       - ecm_logs_volume:/var/lib/docker/containers/logs/:ro
-      - .filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml
     command: ['--strict.perms=false']
     depends_on: 
       - elasticsearch
     networks: 
       - ecm_network
 
+  prometheus:
+    image: prom/prometheus:v2.21.0
+    container_name: prometheus_ecm
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_ecm_data_volume:/prometheus
+    networks:
+      - ecm_network
+    ports:
+      - 9090:9090
+  
+  grafana:
+    image: grafana/grafana:master
+    container_name: grafana_ecm
+    user: root
+    ports:
+      - 3000:3000
+    volumes:
+      - "./var/grafana/grafana_data:/var/lib/grafana"
+      - "./etc/grafana/provisioning:/etc/grafana/provisioning/"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=foobar
+      - GF_USERS_ALLOW_SIGN_UP=false
+    networks:
+      - ecm_network
+    depends_on:
+      - prometheus
+
+  cadvisor:
+    image: google/cadvisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    ports:
+      - 8080:8080
+    networks:
+      - ecm_network
+
 volumes: 
   ecm_logs_volume:
     driver: local
   elastic_ecm_data_volumne:
+    driver: local
+  prometheus_ecm_data_volume:
     driver: local
 
 networks: 
