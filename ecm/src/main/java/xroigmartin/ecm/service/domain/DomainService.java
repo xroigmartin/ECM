@@ -7,9 +7,9 @@ import xroigmartin.ecm.model.domain.Domain;
 public interface DomainService {
 	
 	List<Domain> findAllDomains();
-	Domain findDomainById();
-	Domain findDomainByCodeDomain();
-	Domain storeDomain();
-	Domain changeEnable();
+	Domain findDomainById(Long domainId);
+	Domain findDomainByCodeDomain(String codeDomain);
+	Domain storeDomain(Domain domain);
+	Domain changeEnable(Long domainId);
  
 }
