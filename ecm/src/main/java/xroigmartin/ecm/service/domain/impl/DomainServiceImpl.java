@@ -18,32 +18,40 @@ public class DomainServiceImpl implements DomainService {
 	
 	@Override
 	public List<Domain> findAllDomains() {
-		// TODO Auto-generated method stub
-		return null;
+		return domainRepository.findAll();
 	}
 
 	@Override
 	public Domain findDomainById(Long domainId) {
-		// TODO Auto-generated method stub
-		return null;
+		return domainRepository.findById(domainId).orElse(null);
 	}
 
 	@Override
 	public Domain findDomainByCodeDomain(String codeDomain) {
-		// TODO Auto-generated method stub
-		return null;
+		return domainRepository.findByCodeDomain(codeDomain).orElse(null);
 	}
 
 	@Override
 	public Domain storeDomain(Domain domain) throws CodeDomainExistsException{
-		// TODO Auto-generated method stub
-		return null;
+		Domain domainExists = domainRepository.findByCodeDomain(domain.getCodeDomain()).orElse(null);
+		
+		if(domainExists != null) {
+			throw new CodeDomainExistsException("Exists domain with same code domain");
+		}
+		
+		return domainRepository.save(domain);
 	}
 
 	@Override
 	public Domain changeEnable(Long domainId) {
-		// TODO Auto-generated method stub
-		return null;
+		Domain domain = domainRepository.findById(domainId).orElse(null);
+		
+		if(domain != null) {
+			domain.changeEnable();
+			domainRepository.save(domain);
+		}
+		
+		return domain;
 	}
 
 }
