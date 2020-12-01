@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -113,11 +114,9 @@ class DomainServiceTest {
 	public void shouldSaveDomain() {
 		when(domainRepository.save(domain1)).thenReturn(domain1);
 			
-		Domain domain = domainService.storeDomain(domain1);
-	
-		when(domain.getDomainId()).thenReturn(1L);
+		domainService.storeDomain(domain1);
 		
-		verify(domainRepository).save(domain1);
+		verify(domainRepository, times(1)).save(domain1);
 	}
 	
 	@DisplayName("Test: Not should save the domain when exists other domain with same code domain")
