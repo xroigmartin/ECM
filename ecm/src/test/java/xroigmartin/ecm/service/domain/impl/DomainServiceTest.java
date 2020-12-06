@@ -1,10 +1,10 @@
 package xroigmartin.ecm.service.domain.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -16,16 +16,16 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import xroigmartin.ecm.exceptions.domain.CodeDomainExistsException;
 import xroigmartin.ecm.model.domain.Domain;
 import xroigmartin.ecm.repository.domain.DomainRepository;
-import xroigmartin.ecm.service.domain.impl.DomainServiceImpl;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class DomainServiceTest {
 
 	@Mock
