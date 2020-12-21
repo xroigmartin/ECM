@@ -97,7 +97,7 @@ body {
 }
 
 .nav-masthead .active {
-  color: #000;
+  color: #fff;
   border-bottom-color: #fff;
 }
 
@@ -110,6 +110,10 @@ body {
   }
 }
 
+.ecm-header, .ecm-header:hover {
+  color: #000;
+  text-decoration: none;
+}
 
 /*
  * Cover
