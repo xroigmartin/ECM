@@ -8,6 +8,26 @@ services:
       - "9080:8080"
     volumes:
       - ecm_logs_volume:/logs/
+    depends_on:
+      - mysql
+    networks:
+      - ecm_network
+
+  mysql:
+    image: mysql:8.0.2
+    container_name: mysql_ecm
+    ports: 
+      - 3306:3306
+      - 33060:33060
+    environment: 
+      MYSQL_ROOT_PASSWORD: rootpassword.
+      MYSQL_DATABASE: ecm
+      MYSQL_USER: ecm
+      MYSQL_PASSWORD: ecm
+    volumes:
+      - mysql_ecm_data:/var/lib/mysql
+      - "./sql/schema.sql:/docker-entrypoint-initdb.d/1.sql"
+      - "./sql/data.sql:/docker-entrypoint-initdb.d/2.sql"
     networks:
       - ecm_network
 
@@ -99,6 +119,8 @@ volumes:
   elastic_ecm_data_volumne:
     driver: local
   prometheus_ecm_data_volume:
+    driver: local
+  mysql_ecm_data:
     driver: local
 
 networks: 
