@@ -114,7 +114,18 @@ class DomainServiceTest {
 	public void shouldSaveDomain() {
 		when(domainRepository.save(domain1)).thenReturn(domain1);
 			
-		domainService.storeDomain(domain1);
+		domainService.saveDomain(domain1);
+		
+		verify(domainRepository, times(1)).save(domain1);
+	}
+	
+	@DisplayName("Test: Should add new domain")
+	@Test
+	public void shouldAddNewDomain() {
+		when(domainService.saveDomain(domain1)).thenReturn(domain1);
+		when(domainRepository.findByCodeDomain(domain1.getCodeDomain())).thenReturn(Optional.empty());
+		
+		domainService.addDomain(domain1);
 		
 		verify(domainRepository, times(1)).save(domain1);
 	}
@@ -125,7 +136,7 @@ class DomainServiceTest {
 		when(domainRepository.findByCodeDomain("test1")).thenReturn(Optional.of(domain1));
 		
 		assertThrows(CodeDomainExistsException.class, () -> {
-			domainService.storeDomain(domain1);
+			domainService.addDomain(domain1);
 		});
 	}
 	
