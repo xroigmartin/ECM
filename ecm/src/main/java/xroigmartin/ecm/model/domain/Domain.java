@@ -21,8 +21,8 @@ public class Domain {
 	@Column(name = "code_domain")
 	private String codeDomain;
 	
-	@Column(name="specification")
-	private String specification;
+	@Column(name="code_domain_text")
+	private String codeDomainText;
 	
 	@Column(name = "is_enable")
 	private boolean enable = true;
@@ -36,16 +36,16 @@ public class Domain {
 		this.codeDomain = codeDomain;
 	}
 
-	public Domain(String codeDomain, String specification) {
+	public Domain(String codeDomain, String codeDomainText) {
 		super();
 		this.codeDomain = codeDomain;
-		this.specification = specification;
+		this.codeDomainText = codeDomainText;
 	}
 
-	public Domain(String codeDomain, String specification, boolean enable) {
+	public Domain(String codeDomain, String codeDomainText, boolean enable) {
 		super();
 		this.codeDomain = codeDomain;
-		this.specification = specification;
+		this.codeDomainText = codeDomainText;
 		this.enable = enable;
 	}
 
@@ -56,17 +56,21 @@ public class Domain {
 	public String getCodeDomain() {
 		return codeDomain;
 	}
+	
+	public void setCodeDomain(String codeDomain) {
+		this.codeDomain = codeDomain;
+	}
 
-	public String getSpecification() {
-		return specification;
+	public String getCodeDomainText() {
+		return codeDomainText;
+	}
+
+	public void setCodeDomainText(String codeDomainText) {
+		this.codeDomainText = codeDomainText;
 	}
 
 	public boolean isEnable() {
 		return enable;
-	}
-	
-	public void modifyCodeDomain(String codeDomain) {
-		this.codeDomain = codeDomain;
 	}
 	
 	public void changeEnable() {
@@ -92,7 +96,7 @@ public class Domain {
 
 	@Override
 	public String toString() {
-		return "Domain [domainId=" + domainId + ", codeDomain=" + codeDomain + ", specification=" + specification
+		return "Domain [domainId=" + domainId + ", codeDomain=" + codeDomain + ", codeDomainText=" + codeDomainText
 				+ ", enable=" + enable + "]";
 	}
 	
