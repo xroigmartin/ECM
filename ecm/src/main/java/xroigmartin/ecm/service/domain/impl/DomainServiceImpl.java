@@ -15,7 +15,7 @@ public class DomainServiceImpl implements DomainService {
 
 	@Autowired
 	private DomainRepository domainRepository;
-	
+
 	@Override
 	public List<Domain> findAllDomains() {
 		return domainRepository.findAll();
@@ -29,28 +29,33 @@ public class DomainServiceImpl implements DomainService {
 	@Override
 	public Domain findDomainByCodeDomain(String codeDomain) {
 		return domainRepository.findByCodeDomain(codeDomain).orElse(null);
-	}
-
+	}		
+	
 	@Override
-	public Domain storeDomain(Domain domain) throws CodeDomainExistsException{
-		Domain domainExists = domainRepository.findByCodeDomain(domain.getCodeDomain()).orElse(null);
+	public Domain addDomain(Domain domain) throws CodeDomainExistsException {
+		Domain findDomain = domainRepository.findByCodeDomain(domain.getCodeDomain()).orElse(null);
 		
-		if(domainExists != null) {
+		if(findDomain != null) {
 			throw new CodeDomainExistsException("Exists domain with same code domain");
 		}
 		
+		return this.saveDomain(domain);
+	}
+
+	@Override
+	public Domain saveDomain(Domain domain) {
 		return domainRepository.save(domain);
 	}
 
 	@Override
 	public Domain changeEnable(Long domainId) {
 		Domain domain = domainRepository.findById(domainId).orElse(null);
-		
-		if(domain != null) {
+
+		if (domain != null) {
 			domain.changeEnable();
 			domainRepository.save(domain);
 		}
-		
+
 		return domain;
 	}
 

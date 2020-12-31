@@ -10,7 +10,8 @@ public interface DomainService {
 	List<Domain> findAllDomains();
 	Domain findDomainById(Long domainId);
 	Domain findDomainByCodeDomain(String codeDomain);
-	Domain storeDomain(Domain domain) throws CodeDomainExistsException;
+	Domain addDomain(Domain domain) throws CodeDomainExistsException;
+	Domain saveDomain(Domain domain);
 	Domain changeEnable(Long domainId);
  
 }
