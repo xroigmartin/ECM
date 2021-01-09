@@ -88,26 +88,18 @@ public class DomainApiController {
 
 	@PutMapping("/{id}/enable")
 	public ResponseEntity<DomainDto> enableDomain(@PathVariable Long id){
-		Optional<Domain> domainStore = domainService.findDomainById(id);
-		if(domainStore.isPresent()) {
-			if(!domainStore.get().isEnable()) {
-				Domain domainChanged = domainService.changeEnable(id);
-				return ResponseEntity.ok(domainDtoConverter.converToDto(domainChanged));
-			}
-			else {
-				return ResponseEntity.ok(domainDtoConverter.converToDto(domainStore.get()));
-			}
-		}
-		else {
-			return ResponseEntity.notFound().build();
-		}
+		return this.changeStateDomain(id, true);
 	}
 
 	@PutMapping("/{id}/disable")
 	public ResponseEntity<DomainDto> disableDomain(@PathVariable Long id){
+		return this.changeStateDomain(id, false);
+	}
+	
+	private ResponseEntity<DomainDto> changeStateDomain(long id, boolean enabled){
 		Optional<Domain> domainStore = domainService.findDomainById(id);
 		if(domainStore.isPresent()) {
-			if(domainStore.get().isEnable()) {
+			if(domainStore.get().isEnable() != enabled) {
 				Domain domainChanged = domainService.changeEnable(id);
 				return ResponseEntity.ok(domainDtoConverter.converToDto(domainChanged));
 			}
