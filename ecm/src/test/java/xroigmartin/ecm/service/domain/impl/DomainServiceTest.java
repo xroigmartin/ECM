@@ -2,7 +2,6 @@ package xroigmartin.ecm.service.domain.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
@@ -72,9 +71,9 @@ class DomainServiceTest {
 	public void whenSearchDomainByIdAndThisNotExistsReturnNull() {
 		when(domainRepository.findById(1L)).thenReturn(Optional.empty());
 		
-		Domain domain = domainService.findDomainById(1L);
+		Optional<Domain> domain = domainService.findDomainById(1L);
 		
-		assertNull(domain);
+		assertTrue(domain.isEmpty());
 		
 	}
 	
@@ -83,9 +82,10 @@ class DomainServiceTest {
 	public void whenSearchDomainByIdAndThisExistsItIsReturned() {
 		when(domainRepository.findById(1L)).thenReturn(Optional.of(domain1));
 		
-		Domain domain = domainService.findDomainById(1L);
+		Optional<Domain> domain = domainService.findDomainById(1L);
 		
-		assertEquals("test1", domain.getCodeDomain());
+		assertTrue(domain.isPresent());
+		assertEquals("test1", domain.get().getCodeDomain());
 	}
 	
 	@DisplayName("Test: When search domain by code domain and not exists then return null")
@@ -93,9 +93,9 @@ class DomainServiceTest {
 	public void whenSearchDomainByCodeDomainAndNotExistsThenReturnNull() {
 		when(domainRepository.findByCodeDomain("test")).thenReturn(Optional.empty());
 		
-		Domain domain = domainService.findDomainByCodeDomain("test");
+		Optional<Domain> domain = domainService.findDomainByCodeDomain("test");
 		
-		assertNull(domain);
+		assertTrue(domain.isEmpty());
 	}
 	
 	@DisplayName("Test: When search domain by code domain and exists then return domain info")
@@ -103,9 +103,10 @@ class DomainServiceTest {
 	public void whenSearchDomainByCodeDomainAndExistsThenReturnDomainInfo() {
 		when(domainRepository.findByCodeDomain("test1")).thenReturn(Optional.of(domain1));
 		
-		Domain domain = domainService.findDomainByCodeDomain("test1");
+		Optional<Domain> domain = domainService.findDomainByCodeDomain("test1");
 		
-		assertEquals("test1", domain.getCodeDomain());
+		assertTrue(domain.isPresent());
+		assertEquals("test1", domain.get().getCodeDomain());
 		
 	}
 	
