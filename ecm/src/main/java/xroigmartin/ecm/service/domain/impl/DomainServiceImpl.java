@@ -1,6 +1,7 @@
 package xroigmartin.ecm.service.domain.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,13 +23,13 @@ public class DomainServiceImpl implements DomainService {
 	}
 
 	@Override
-	public Domain findDomainById(Long domainId) {
-		return domainRepository.findById(domainId).orElse(null);
+	public Optional<Domain> findDomainById(Long domainId) {
+		return domainRepository.findById(domainId);
 	}
 
 	@Override
-	public Domain findDomainByCodeDomain(String codeDomain) {
-		return domainRepository.findByCodeDomain(codeDomain).orElse(null);
+	public Optional<Domain> findDomainByCodeDomain(String codeDomain) {
+		return domainRepository.findByCodeDomain(codeDomain);
 	}		
 	
 	@Override
