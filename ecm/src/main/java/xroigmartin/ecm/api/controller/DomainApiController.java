@@ -1,6 +1,7 @@
 package xroigmartin.ecm.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,13 +49,13 @@ public class DomainApiController {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<DomainDto> getDomainById(@PathVariable Long id){
-		Domain domain = domainService.findDomainById(id);
+		Optional<Domain> domain = domainService.findDomainById(id);
 		
-		if(domain == null) {
-			return ResponseEntity.notFound().build();
+		if(domain.isPresent()) {
+			return ResponseEntity.ok(domainDtoConverter.converToDto(domain.get()));
 		}
 		else {
-			return ResponseEntity.ok(domainDtoConverter.converToDto(domain));			
+			return ResponseEntity.notFound().build();
 		}
 	}
 
@@ -69,15 +70,16 @@ public class DomainApiController {
 
 	@PutMapping("/{id}/edit")
 	public ResponseEntity<DomainDto> editDomain(@RequestBody Domain domainEdit, @PathVariable Long id){
-		Domain domainStore = domainService.findDomainById(id);
-		if (domainStore != null){
-			domainStore.setCodeDomain(domainEdit.getCodeDomain());
-			domainStore.setCodeDomainText(domainEdit.getCodeDomainText());
-			if (domainStore.isEnable() != domainEdit.isEnable()){
-				domainStore.changeEnable();
+		Optional<Domain> domainStore = domainService.findDomainById(id);
+		if (domainStore.isPresent()){
+			Domain domainChanged = domainStore.get();
+			domainChanged.setCodeDomain(domainEdit.getCodeDomain());
+			domainChanged.setCodeDomainText(domainEdit.getCodeDomainText());
+			if (domainChanged.isEnable() != domainEdit.isEnable()){
+				domainChanged.changeEnable();
 			}
 			
-			Domain domainSaved = domainService.saveDomain(domainStore);
+			Domain domainSaved = domainService.saveDomain(domainChanged);
 			
 			return ResponseEntity.ok(domainDtoConverter.converToDto(domainSaved));
 		}
@@ -86,14 +88,14 @@ public class DomainApiController {
 
 	@PutMapping("/{id}/enable")
 	public ResponseEntity<DomainDto> enableDomain(@PathVariable Long id){
-		Domain domainStore = domainService.findDomainById(id);
-		if(domainStore != null) {
-			if(!domainStore.isEnable()) {
+		Optional<Domain> domainStore = domainService.findDomainById(id);
+		if(domainStore.isPresent()) {
+			if(!domainStore.get().isEnable()) {
 				Domain domainChanged = domainService.changeEnable(id);
 				return ResponseEntity.ok(domainDtoConverter.converToDto(domainChanged));
 			}
 			else {
-				return ResponseEntity.ok(domainDtoConverter.converToDto(domainStore));
+				return ResponseEntity.ok(domainDtoConverter.converToDto(domainStore.get()));
 			}
 		}
 		else {
@@ -103,14 +105,14 @@ public class DomainApiController {
 
 	@PutMapping("/{id}/disable")
 	public ResponseEntity<DomainDto> disableDomain(@PathVariable Long id){
-		Domain domainStore = domainService.findDomainById(id);
-		if(domainStore != null) {
-			if(domainStore.isEnable()) {
+		Optional<Domain> domainStore = domainService.findDomainById(id);
+		if(domainStore.isPresent()) {
+			if(domainStore.get().isEnable()) {
 				Domain domainChanged = domainService.changeEnable(id);
 				return ResponseEntity.ok(domainDtoConverter.converToDto(domainChanged));
 			}
 			else {
-				return ResponseEntity.ok(domainDtoConverter.converToDto(domainStore));
+				return ResponseEntity.ok(domainDtoConverter.converToDto(domainStore.get()));
 			}
 		}
 		else {
