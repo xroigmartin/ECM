@@ -22,8 +22,8 @@ public class GlobalControllerAdvice extends ResponseEntityExceptionHandler{
 	
 	@ExceptionHandler(CodeDomainExistsException.class)
 	public ResponseEntity<ApiError> handlerCodeDomainExists(CodeDomainExistsException ex){
-		ApiError apiError = new ApiError(HttpStatus.CONFLICT, ex.getMessage());
-		return ResponseEntity.status(HttpStatus.CONFLICT).body(apiError);
+		ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiError);
 	}
 
 	@Override
