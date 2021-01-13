@@ -14,9 +14,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import xroigmartin.ecm.api.controller.dto.CreateDomainDto;
 import xroigmartin.ecm.api.controller.dto.DomainDto;
 import xroigmartin.ecm.api.controller.dto.converter.DomainDtoConverter;
+import xroigmartin.ecm.exceptions.api.ApiError;
 import xroigmartin.ecm.exceptions.api.domain.DomainNotFoundException;
 import xroigmartin.ecm.model.domain.Domain;
 import xroigmartin.ecm.service.domain.DomainService;
@@ -31,6 +39,13 @@ public class DomainApiController {
 	@Autowired
 	private DomainDtoConverter domainDtoConverter;
 
+	@Operation(summary = "Listar todos los dominios")
+	@ApiResponse(responseCode = "200", description="Listado de dominios",
+				content = @Content(mediaType = "application/json", 
+									array = @ArraySchema(schema = @Schema(implementation = Domain.class),
+									minItems = 0)
+				)
+	)
 	@GetMapping("/getAllDomains")
 	public ResponseEntity<List<DomainDto>> getAllDomains() {
 		
@@ -47,14 +62,35 @@ public class DomainApiController {
 		}
 	}
 
+	@Operation(summary = "Obtener un dominio a partir de su id", responses = {
+			@ApiResponse(responseCode = "200", description="Dominio encontrado",
+						content = @Content(mediaType = "application/json", 
+											schema = @Schema(implementation = Domain.class))
+						),
+			@ApiResponse(responseCode = "404", description="Dominio no encontrado",
+					content = @Content(mediaType = "application/json", 
+					schema = @Schema(implementation = ApiError.class)))
+		}
+	)
 	@GetMapping("/{id}")
-	public Domain getDomainById(@PathVariable Long id){
+	public Domain getDomainById(@Parameter(description = "id del dominio a buscar")@PathVariable Long id){
 		return domainService.findDomainById(id)
 							.orElseThrow(() -> new DomainNotFoundException(id));
 	}
 
+	@Operation(summary = "Añadir un dominio nuevo", responses = {
+			@ApiResponse(responseCode = "201", description="Dominio creado",
+						content = @Content(mediaType = "application/json", 
+											schema = @Schema(implementation = Domain.class))
+						),
+			@ApiResponse(responseCode = "500", description="Ya existe un dominio con ese código de dominio",
+					content = @Content(mediaType = "application/json", 
+					schema = @Schema(implementation = ApiError.class)))
+		}
+	)
 	@PostMapping("/new")
-	public ResponseEntity<DomainDto> insertDomain(@RequestBody CreateDomainDto newDomain){
+	public ResponseEntity<DomainDto> insertDomain(@Parameter(description = "Datos del nuevo dominio", schema = @Schema(implementation = CreateDomainDto.class))
+													@RequestBody CreateDomainDto newDomain){
 		Domain addDomain = new Domain(newDomain.getCodeDomain(), newDomain.getCodeDomainText());
 		Domain domainSaved = domainService.addDomain(addDomain);
 		
@@ -62,8 +98,23 @@ public class DomainApiController {
 							 .body(domainDtoConverter.converToDto(domainSaved));
 	}
 
+	@Operation(summary = "Editar un dominio", responses = {
+			@ApiResponse(responseCode = "200", description="Dominio modificado",
+						content = @Content(mediaType = "application/json", 
+											schema = @Schema(implementation = Domain.class))),
+			@ApiResponse(responseCode = "404", description="Dominio no encontrado",
+					content = @Content(mediaType = "application/json", 
+					schema = @Schema(implementation = ApiError.class))),
+			@ApiResponse(responseCode = "500", description="Ya existe un dominio con ese código de dominio",
+					content = @Content(mediaType = "application/json", 
+					schema = @Schema(implementation = ApiError.class)))
+		}
+	)
 	@PutMapping("/{id}/edit")
-	public DomainDto editDomain(@RequestBody Domain domainEdit, @PathVariable Long id){
+	public DomainDto editDomain(@Parameter(description = "Datos a modificar del dominio", schema = @Schema(implementation = CreateDomainDto.class))
+								@RequestBody Domain domainEdit, 
+								@Parameter(description = "id del dominio a buscar")
+								@PathVariable Long id){
 		return domainService.findDomainById(id)
 							.map(d -> {
 								d.setCodeDomain(domainEdit.getCodeDomain());
@@ -75,13 +126,41 @@ public class DomainApiController {
 							}).orElseThrow(() -> new DomainNotFoundException(id));
 	}
 
+	@Operation(summary = "Reactiva un dominio", responses = {
+			@ApiResponse(responseCode = "200", description="Dominio reactivado",
+						content = @Content(mediaType = "application/json", 
+											schema = @Schema(implementation = Domain.class))
+						),
+			@ApiResponse(responseCode = "404", description="Dominio no encontrado",
+					content = @Content(mediaType = "application/json", 
+					schema = @Schema(implementation = ApiError.class)))
+		}
+	)
 	@PutMapping("/{id}/enable")
-	public DomainDto enableDomain(@PathVariable Long id){
+	public DomainDto enableDomain(@Parameter(description = "id del dominio a buscar")@PathVariable Long id){
 		return changeStateDomain(id, true);
 	}
-
+	
+	@Operation(summary = "Desactiva un dominio", responses = {
+			@ApiResponse(responseCode = "200", description="Dominio desactivado",
+						content = @Content(mediaType = "application/json", 
+											examples = {
+													@ExampleObject(value="{\n"
+															+ "  \"domainId\": 0,\n"
+															+ "  \"codeDomain\": \"string\",\n"
+															+ "  \"codeDomainText\": \"string\",\n"
+															+ "  \"enable\": false\n"
+															+ "}")
+											},
+											schema = @Schema(implementation = Domain.class))
+						),
+			@ApiResponse(responseCode = "404", description="Dominio no encontrado",
+					content = @Content(mediaType = "application/json",
+									schema = @Schema(implementation = ApiError.class)))
+		}
+	)
 	@PutMapping("/{id}/disable")
-	public DomainDto disableDomain(@PathVariable Long id){
+	public DomainDto disableDomain(@Parameter(description = "id del dominio a buscar")@PathVariable Long id){
 		return changeStateDomain(id, false);
 	}
 
