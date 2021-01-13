@@ -1,7 +1,6 @@
 package xroigmartin.ecm.api.controller;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import xroigmartin.ecm.api.controller.dto.CreateDomainDto;
 import xroigmartin.ecm.api.controller.dto.DomainDto;
 import xroigmartin.ecm.api.controller.dto.converter.DomainDtoConverter;
+import xroigmartin.ecm.exceptions.api.domain.DomainNotFoundException;
 import xroigmartin.ecm.model.domain.Domain;
 import xroigmartin.ecm.service.domain.DomainService;
 
@@ -48,15 +48,9 @@ public class DomainApiController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<DomainDto> getDomainById(@PathVariable Long id){
-		Optional<Domain> domain = domainService.findDomainById(id);
-		
-		if(domain.isPresent()) {
-			return ResponseEntity.ok(domainDtoConverter.converToDto(domain.get()));
-		}
-		else {
-			return ResponseEntity.notFound().build();
-		}
+	public Domain getDomainById(@PathVariable Long id){
+		return domainService.findDomainById(id)
+							.orElseThrow(() -> new DomainNotFoundException(id));
 	}
 
 	@PostMapping("/new")
@@ -69,47 +63,38 @@ public class DomainApiController {
 	}
 
 	@PutMapping("/{id}/edit")
-	public ResponseEntity<DomainDto> editDomain(@RequestBody Domain domainEdit, @PathVariable Long id){
-		Optional<Domain> domainStore = domainService.findDomainById(id);
-		if (domainStore.isPresent()){
-			Domain domainChanged = domainStore.get();
-			domainChanged.setCodeDomain(domainEdit.getCodeDomain());
-			domainChanged.setCodeDomainText(domainEdit.getCodeDomainText());
-			if (domainChanged.isEnable() != domainEdit.isEnable()){
-				domainChanged.changeEnable();
-			}
-			
-			Domain domainSaved = domainService.saveDomain(domainChanged);
-			
-			return ResponseEntity.ok(domainDtoConverter.converToDto(domainSaved));
-		}
-		return ResponseEntity.notFound().build();
+	public DomainDto editDomain(@RequestBody Domain domainEdit, @PathVariable Long id){
+		return domainService.findDomainById(id)
+							.map(d -> {
+								d.setCodeDomain(domainEdit.getCodeDomain());
+								d.setCodeDomainText(domainEdit.getCodeDomainText());
+								if(d.isEnable() != domainEdit.isEnable()) {
+									d.changeEnable();
+								}
+								return domainDtoConverter.converToDto(domainService.saveDomain(d));
+							}).orElseThrow(() -> new DomainNotFoundException(id));
 	}
 
 	@PutMapping("/{id}/enable")
-	public ResponseEntity<DomainDto> enableDomain(@PathVariable Long id){
-		return this.changeStateDomain(id, true);
+	public DomainDto enableDomain(@PathVariable Long id){
+		return changeStateDomain(id, true);
 	}
 
 	@PutMapping("/{id}/disable")
-	public ResponseEntity<DomainDto> disableDomain(@PathVariable Long id){
-		return this.changeStateDomain(id, false);
+	public DomainDto disableDomain(@PathVariable Long id){
+		return changeStateDomain(id, false);
+	}
+
+	private DomainDto changeStateDomain(long id, boolean enabled){
+		return domainService.findDomainById(id)
+				.map(d -> {
+					if(d.isEnable() != enabled) {
+						return domainDtoConverter.converToDto(domainService.changeEnable(id));
+					}
+					return domainDtoConverter.converToDto(d);
+				}).orElseThrow(() -> new DomainNotFoundException(id));
 	}
 	
-	private ResponseEntity<DomainDto> changeStateDomain(long id, boolean enabled){
-		Optional<Domain> domainStore = domainService.findDomainById(id);
-		if(domainStore.isPresent()) {
-			if(domainStore.get().isEnable() != enabled) {
-				Domain domainChanged = domainService.changeEnable(id);
-				return ResponseEntity.ok(domainDtoConverter.converToDto(domainChanged));
-			}
-			else {
-				return ResponseEntity.ok(domainDtoConverter.converToDto(domainStore.get()));
-			}
-		}
-		else {
-			return ResponseEntity.notFound().build();
-		}
-	}
+	
 	
 }

@@ -37,7 +37,7 @@ public class DomainServiceImpl implements DomainService {
 		Domain findDomain = domainRepository.findByCodeDomain(domain.getCodeDomain()).orElse(null);
 		
 		if(findDomain != null) {
-			throw new CodeDomainExistsException("Exists domain with same code domain");
+			throw new CodeDomainExistsException("Exists domain with code domain: " + domain.getCodeDomain());
 		}
 		
 		return this.saveDomain(domain);
