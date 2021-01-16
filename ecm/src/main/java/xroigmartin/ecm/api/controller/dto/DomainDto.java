@@ -2,16 +2,16 @@ package xroigmartin.ecm.api.controller.dto;
 
 public class DomainDto {
 
-	private Long id;
+	private Long domainId;
 	private String codeDomain;
 	private String codeDomainText;
 	private Boolean enable;
 	
-	public Long getId() {
-		return id;
+	public Long getDomainId() {
+		return domainId;
 	}
-	public void setId(Long id) {
-		this.id = id;
+	public void setDomainId(Long domainId) {
+		this.domainId = domainId;
 	}
 	public String getCodeDomain() {
 		return codeDomain;
