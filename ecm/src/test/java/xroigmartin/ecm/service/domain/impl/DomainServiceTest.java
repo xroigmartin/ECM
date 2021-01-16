@@ -1,5 +1,6 @@
 package xroigmartin.ecm.service.domain.impl;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -19,6 +20,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import xroigmartin.ecm.exceptions.domain.CodeDomainExistsException;
 import xroigmartin.ecm.model.domain.Domain;
@@ -64,6 +69,44 @@ class DomainServiceTest {
 		List<Domain> domainList = domainService.findAllDomains();
 		
 		assertTrue(domainList.size() > 0);
+	}
+	
+	@DisplayName("Test: Return pageable list of domains")
+	@Test
+	public void whenExistsDomainReturnPageableListWithThem() {
+		List<Domain> domainPageListMock = new ArrayList<>();
+		domainPageListMock.add(domain1);
+
+		List<Domain> totalDomainListMock = new ArrayList<>();
+		totalDomainListMock.add(domain1);
+		totalDomainListMock.add(domain2);
+		
+		Pageable pageable = PageRequest.of(0,1);
+		
+		Page<Domain> pageDomains = new PageImpl<Domain>(domainPageListMock, pageable, totalDomainListMock.size());
+		
+		when(domainRepository.findAll(pageable)).thenReturn(pageDomains);
+		Page<Domain> pageableDomains = domainService.findAllDomains(pageable);
+		
+		assertThat(pageableDomains.getContent().size()).isEqualTo(domainPageListMock.size());
+		assertThat(pageableDomains.getTotalPages() == 2);
+	}
+	
+	@DisplayName("Test: Return empty pageable list of domains")
+	@Test
+	public void whenNotExistsDomainReturnEmptyPageableList() {
+		List<Domain> domainPageListMock = new ArrayList<>();
+
+		List<Domain> totalDomainListMock = new ArrayList<>();
+		
+		Pageable pageable = PageRequest.of(0,1);
+		
+		Page<Domain> pageDomains = new PageImpl<Domain>(domainPageListMock, pageable, totalDomainListMock.size());
+		
+		when(domainRepository.findAll(pageable)).thenReturn(pageDomains);
+		Page<Domain> pageableDomains = domainService.findAllDomains(pageable);
+		
+		assertThat(pageableDomains.isEmpty());
 	}
 	
 	@DisplayName("Test: When search domain by id and this not exists return null")
