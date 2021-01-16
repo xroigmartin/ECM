@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import xroigmartin.ecm.exceptions.domain.CodeDomainExistsException;
@@ -20,6 +22,11 @@ public class DomainServiceImpl implements DomainService {
 	@Override
 	public List<Domain> findAllDomains() {
 		return domainRepository.findAll();
+	}
+
+	@Override
+	public Page<Domain> findAllDomains(Pageable pageable) {
+		return domainRepository.findAll(pageable);
 	}
 
 	@Override

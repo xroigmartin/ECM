@@ -1,9 +1,11 @@
 package xroigmartin.ecm.api.controller;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,9 +15,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -28,6 +33,7 @@ import xroigmartin.ecm.exceptions.api.ApiError;
 import xroigmartin.ecm.exceptions.api.domain.DomainNotFoundException;
 import xroigmartin.ecm.model.domain.Domain;
 import xroigmartin.ecm.service.domain.DomainService;
+import xroigmartin.ecm.utils.pagination.PaginationLinkUtils;
 
 @RestController
 @RequestMapping("/api/domain")
@@ -38,6 +44,9 @@ public class DomainApiController {
 	
 	@Autowired
 	private DomainDtoConverter domainDtoConverter;
+	
+	@Autowired
+	private PaginationLinkUtils paginationLinkUtils;
 
 	@Operation(summary = "Listar todos los dominios")
 	@ApiResponse(responseCode = "200", description="Listado de dominios",
@@ -47,18 +56,22 @@ public class DomainApiController {
 				)
 	)
 	@GetMapping("/getAllDomains")
-	public ResponseEntity<List<DomainDto>> getAllDomains() {
+	public ResponseEntity<Page<DomainDto>> getAllDomains(@PageableDefault(size=10, page=0, sort = "codeDomain") Pageable pageable,
+															HttpServletRequest request) {
 		
-		List<Domain> listOfDomains = domainService.findAllDomains();
+		Page<Domain> listOfDomains = domainService.findAllDomains(pageable);
 		
 		if(listOfDomains.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
 		else {		
-			List<DomainDto> dtoList = listOfDomains.stream()
-													.map(domainDtoConverter::converToDto)
-													.collect(Collectors.toList());
-			return ResponseEntity.ok(dtoList);
+			Page<DomainDto> dtoList = listOfDomains.map(domainDtoConverter::converToDto);
+			
+			UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(request.getRequestURL().toString());
+			
+			return ResponseEntity.ok()
+								.header("link", paginationLinkUtils.createLinkHeader(dtoList, uriBuilder))
+								.body(dtoList);
 		}
 	}
 
