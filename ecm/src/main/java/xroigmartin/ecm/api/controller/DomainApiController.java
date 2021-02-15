@@ -160,7 +160,7 @@ public class DomainApiController {
 						content = @Content(mediaType = "application/json", 
 											examples = {
 													@ExampleObject(value="{\n"
-															+ "  \"domainId\": 0,\n"
+															+ "  \"id\": 0,\n"
 															+ "  \"codeDomain\": \"string\",\n"
 															+ "  \"codeDomainText\": \"string\",\n"
 															+ "  \"enable\": false\n"
