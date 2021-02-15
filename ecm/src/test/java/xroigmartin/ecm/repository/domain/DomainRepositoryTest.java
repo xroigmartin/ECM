@@ -87,7 +87,7 @@ class DomainRepositoryTest {
 	public void shouldFindDomainById() {
 		domainRepository.save(domain1);
 		
-		Optional<Domain> domainOptional = domainRepository.findById(domain1.getDomainId());
+		Optional<Domain> domainOptional = domainRepository.findById(domain1.getId());
 		
 		assertTrue(domainOptional.isPresent());
 	}
