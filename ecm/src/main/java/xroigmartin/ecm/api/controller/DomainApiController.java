@@ -56,7 +56,7 @@ public class DomainApiController {
 	)
 	@GetMapping("/getAllDomains")
 	public ResponseEntity<Page<DomainDto>> getAllDomains(
-			@PageableDefault(size=10, page=0, sort = {"domainId"}, direction = Direction.ASC)
+			@PageableDefault(size=10, page=0, sort = {"id"}, direction = Direction.ASC)
 			Pageable pageable,
 			HttpServletRequest request) {
 		

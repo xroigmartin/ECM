@@ -18,7 +18,7 @@ public class Domain {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "domain_id")
-	private Long domainId;
+	private Long id;
 	
 	@Column(name = "code_domain")
 	private String codeDomain;
@@ -54,8 +54,12 @@ public class Domain {
 		this.enable = enable;
 	}
 
-	public Long getDomainId() {
-		return domainId;
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getCodeDomain() {
@@ -92,7 +96,7 @@ public class Domain {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(codeDomain, domainId);
+		return Objects.hash(codeDomain, id);
 	}
 
 	@Override
@@ -104,12 +108,12 @@ public class Domain {
 		if (getClass() != obj.getClass())
 			return false;
 		Domain other = (Domain) obj;
-		return Objects.equals(codeDomain, other.codeDomain) && Objects.equals(domainId, other.domainId);
+		return Objects.equals(codeDomain, other.codeDomain) && Objects.equals(id, other.id);
 	}
 
 	@Override
 	public String toString() {
-		return "Domain [domainId=" + domainId + ", codeDomain=" + codeDomain + ", codeDomainText=" + codeDomainText
+		return "Domain [domainId=" + id + ", codeDomain=" + codeDomain + ", codeDomainText=" + codeDomainText
 				+ ", enable=" + enable + "]";
 	}
 	
