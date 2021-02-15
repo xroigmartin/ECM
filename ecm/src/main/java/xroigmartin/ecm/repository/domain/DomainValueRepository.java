@@ -12,4 +12,6 @@ public interface DomainValueRepository extends JpaRepository<DomainValue, Long>{
 	List<DomainValue> findByDomainId(Long domainId);
 	
 	Optional<DomainValue> findByValueAndDomainId(String value, Long domainId);
+	
+	List<DomainValue> findByValueContainingAndDomainId(String value, Long domainId);
 }

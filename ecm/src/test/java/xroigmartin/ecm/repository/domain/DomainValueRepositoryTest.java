@@ -39,19 +39,19 @@ class DomainValueRepositoryTest {
 	
 	@DisplayName("Test: When find values of domain with domain object returns a list with its domain values")
 	@Test
-	public void whenFindValuesOfDomainWithDomainObjectReturnList() {
+	public void whenFindValuesOfDomainWithItIdReturnList() {
 		domainValueRepository.save(domainValue1);
 		domainValueRepository.save(domainValue2);
 
-		List<DomainValue> domainValueList = domainValueRepository.findAllDomainValueByDomain(domain);
+		List<DomainValue> domainValueList = domainValueRepository.findByDomainId(domain.getId());
 
 		assertTrue(domainValueList.size() == 2);
 	}
 
 	@DisplayName("Test: When find value of domain with domain object returns empty list because not exists values for it domain")
 	@Test
-	public void whenFindValuesOfDomainWithDomainObjectReturnEmptyList() {
-		List<DomainValue> domainValueList = domainValueRepository.findAllDomainValueByDomain(domain);
+	public void whenFindValuesOfDomainWithItIdReturnEmptyList() {
+		List<DomainValue> domainValueList = domainValueRepository.findByDomainId(domain.getId());
 
 		assertTrue(domainValueList.isEmpty());
 	}
@@ -72,6 +72,47 @@ class DomainValueRepositoryTest {
 		Optional<DomainValue> domainValue = domainValueRepository.findById(1L);
 
 		assertTrue(domainValue.isEmpty());
+	}
+	
+	@DisplayName("Test: It should find domain value with it value and domain id")
+	@Test
+	public void shouldFindDomainValueWithItValueAndDomainID() {
+		domainValueRepository.save(domainValue1);
+		domainValueRepository.save(domainValue2);
+		
+		Optional<DomainValue> domainValue = domainValueRepository.findByValueAndDomainId("test", domain.getId());
+		
+		assertTrue(domainValue.isPresent());
+	}
+	
+	@DisplayName("Test: It shouldn't find domain value with it value and domain id")
+	@Test
+	public void shouldNotFindDomainValueWithItValueAndDomainID() {
+		Optional<DomainValue> domainValue = domainValueRepository.findByValueAndDomainId("test", domain.getId());
+		
+		assertTrue(domainValue.isEmpty());
+	}
+	
+	@DisplayName("Test: It should find any domain value that contains the value text and domain id")
+	@Test
+	public void shouldFindDomainValueContainsValueTextAndDomainID() {
+		domainValueRepository.save(domainValue1);
+		domainValueRepository.save(domainValue2);
+		
+		List<DomainValue> domainValueList = domainValueRepository.findByValueContainingAndDomainId("test", domain.getId());
+		
+		assertTrue(!domainValueList.isEmpty() && domainValueList.size() == 2);
+	}
+	
+	@DisplayName("Test: It shouldn't find any domain value that contains the value text and domain id")
+	@Test
+	public void shouldNotFindDomainValueContainsValueTextAndDomainID() {
+		domainValueRepository.save(domainValue1);
+		domainValueRepository.save(domainValue2);
+		
+		List<DomainValue> domainValueList = domainValueRepository.findByValueContainingAndDomainId("fail", domain.getId());
+		
+		assertTrue(domainValueList.isEmpty());
 	}
 
 	@DisplayName("Test: Should save new domain value")
