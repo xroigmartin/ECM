@@ -17,7 +17,7 @@ public class DomainValue {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "domain_value_id")
-	private Long domainValueId;
+	private Long id;
 	
 	@Column(name="value")
 	@NotNull
@@ -48,9 +48,13 @@ public class DomainValue {
 		this.enable = enable;
 		this.domain = domain;
 	}
-	
-	public Long getDomainValueId() {
-		return domainValueId;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getValue() {
