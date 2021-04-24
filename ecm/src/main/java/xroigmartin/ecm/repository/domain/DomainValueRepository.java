@@ -16,6 +16,9 @@ public interface DomainValueRepository extends JpaRepository<DomainValue, Long>{
 	List<DomainValue> findByDomainIdAndEnableTrue(Long domainId);
 	Page<DomainValue> findByDomainIdAndEnableTrue(Long domainId, Pageable pageable);
 	
+	Optional<DomainValue> findByValueId(Long id);
+	Optional<DomainValue> findByValueIdAndEnableTrue(Long id);
+	
 	List<DomainValue> findByValue(String value);
 	Page<DomainValue> findByValue(String value, Pageable pageable);
 	List<DomainValue> findByValueAndEnableTrue(String value);

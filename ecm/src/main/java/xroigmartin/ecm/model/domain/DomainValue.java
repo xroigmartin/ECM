@@ -69,8 +69,8 @@ public class DomainValue {
 		return enable;
 	}
 
-	public void changeEnable(Boolean enable) {
-		this.enable = enable;
+	public void changeEnable() {
+		this.enable = !this.enable;
 	}
 
 	public Domain getDomain() {

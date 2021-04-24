@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import xroigmartin.ecm.exceptions.domain.DomainValueExistsException;
 import xroigmartin.ecm.model.domain.DomainValue;
 
 public interface DomainValueService {
@@ -15,9 +16,9 @@ public interface DomainValueService {
 	Page<DomainValue> findDomainValueByDomainIdPageable(Long domainId, Pageable pageable);
 	
 	Optional<DomainValue> findDomainValueById(Long id);
-	Optional<DomainValue> findDomainValueByValueAndDomainId(Long value, Long DomainId);
+	Optional<DomainValue> findDomainValueByValueAndDomainId(String value, Long domainId);
 	
-	void addDomainValue(DomainValue domainValue);
+	void addDomainValue(DomainValue domainValue) throws DomainValueExistsException;
 	
 	void saveDomainValue(DomainValue domainValue);
 	
