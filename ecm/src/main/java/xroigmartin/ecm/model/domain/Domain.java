@@ -1,5 +1,6 @@
 package xroigmartin.ecm.model.domain;
 
+import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -7,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -26,6 +28,9 @@ public class Domain {
 	
 	@Column(name = "is_enable")
 	private boolean enable = true;
+	
+	@OneToMany(mappedBy = "domain")
+	private List<DomainValue> valuesOfDomain;
 
 	public Domain() {
 		super();
@@ -79,6 +84,14 @@ public class Domain {
 	
 	public void changeEnable() {
 		this.enable = !this.enable;
+	}
+	
+	public List<DomainValue> getValuesOfDomain() {
+		return valuesOfDomain;
+	}
+
+	public void setValuesOfDomain(List<DomainValue> valuesOfDomain) {
+		this.valuesOfDomain = valuesOfDomain;
 	}
 
 	@Override
