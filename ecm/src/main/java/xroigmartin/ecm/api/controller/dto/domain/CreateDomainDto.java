@@ -1,4 +1,4 @@
-package xroigmartin.ecm.api.controller.dto;
+package xroigmartin.ecm.api.controller.dto.domain;
 
 public class CreateDomainDto {
 	
