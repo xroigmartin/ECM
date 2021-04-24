@@ -32,4 +32,24 @@ public class DomainValueServiceImpl implements DomainValueService {
 	public Optional<DomainValue> findValueOfDomain(String value, Long domainId) {
 		return domainValueRepository.findValueByValueAndDomainId(value, domainId);
 	}
+
+	@Override
+	public List<DomainValue> findValuesByValue(String value) {
+		return domainValueRepository.findValuesByValue(value);
+	}
+
+	@Override
+	public Page<DomainValue> findValuesByValue(String value, Pageable pageable) {
+		return domainValueRepository.findValuesByValue(value, pageable);
+	}
+
+	@Override
+	public List<DomainValue> findValuesByValueContaining(String value) {
+		return domainValueRepository.findValuesByValueContaining(value);
+	}
+
+	@Override
+	public Page<DomainValue> findValuesByValueContaining(String value, Pageable pageable) {
+		return domainValueRepository.findValuesByValueContaining(value, pageable);
+	}
 }
