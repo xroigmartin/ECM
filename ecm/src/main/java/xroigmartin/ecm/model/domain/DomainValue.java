@@ -33,6 +33,10 @@ public class DomainValue {
 	@ManyToOne
 	@JoinColumn(name = "domain_id")
 	private Domain domain;
+
+	public DomainValue() {
+		super();
+	}
 	
 	public DomainValue(String value, Domain domain) {
 		super();
