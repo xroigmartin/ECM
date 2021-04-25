@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "domain_value")
 public class DomainValue {
@@ -28,7 +30,8 @@ public class DomainValue {
 	@NotNull
 	@Column(name="is_enable")
 	private Boolean enable = true;
-	
+
+	@JsonBackReference
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "domain_id")
