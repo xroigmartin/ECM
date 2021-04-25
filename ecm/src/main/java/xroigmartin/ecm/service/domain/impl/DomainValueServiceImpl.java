@@ -52,4 +52,9 @@ public class DomainValueServiceImpl implements DomainValueService {
 	public Page<DomainValue> findValuesByValueContaining(String value, Pageable pageable) {
 		return domainValueRepository.findValuesByValueContaining(value, pageable);
 	}
+
+	@Override
+	public Optional<DomainValue> findById(Long domainValueId) {
+		return domainValueRepository.findById(domainValueId); 
+	}
 }

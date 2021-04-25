@@ -107,5 +107,16 @@ public class DomainValueApiController {
 		}
 	}
 	
-	
+	@GetMapping("/id/{domainValueId}")
+	public DomainValueDto findById(@PathVariable Long domainValueId) {
+		Optional<DomainValue> domainValue = domainValueService.findById(domainValueId);
+		
+		if(domainValue.isEmpty()) {
+			throw new DomainValueNotFoundException(domainValueId);
+		}
+		else {
+			return domainValueDtoConverter.converToDto(domainValue.get());
+		}
+	}
+		
 }

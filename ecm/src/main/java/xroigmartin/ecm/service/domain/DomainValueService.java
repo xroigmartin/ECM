@@ -13,6 +13,8 @@ public interface DomainValueService {
 	List<DomainValue> valuesOfDomain(Long domainId);
 	Page<DomainValue> valuesOfDomain(Long domainId, Pageable pageable);
 	
+	Optional<DomainValue> findById(Long domainValueId);
+	
 	List<DomainValue> findValuesByValue(String value);
 	Page<DomainValue> findValuesByValue(String value, Pageable pageable);
 	
