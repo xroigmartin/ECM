@@ -7,5 +7,9 @@ public class DomainValueExistsException extends RuntimeException {
 	public DomainValueExistsException(String message) {
 		super(message);
 	}
+	
+	public DomainValueExistsException(String value, Long domainId) {
+		super("Domain value with the value " + value + "already exists for the domain with the id " + domainId);
+	}
 
 }

@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import xroigmartin.ecm.exceptions.domain.DomainValueExistsException;
 import xroigmartin.ecm.model.domain.DomainValue;
 import xroigmartin.ecm.repository.domain.DomainValueRepository;
 import xroigmartin.ecm.service.domain.DomainValueService;
@@ -56,5 +57,23 @@ public class DomainValueServiceImpl implements DomainValueService {
 	@Override
 	public Optional<DomainValue> findById(Long domainValueId) {
 		return domainValueRepository.findById(domainValueId); 
+	}
+
+	@Override
+	public DomainValue addDomainValue(DomainValue newDomainValue) throws DomainValueExistsException{
+		
+		Optional<DomainValue> existsDomainValue = this.findValueOfDomain(newDomainValue.getValue(), newDomainValue.getDomain().getId());
+		
+		if(existsDomainValue.isPresent()) {
+			throw new DomainValueExistsException(newDomainValue.getValue(), newDomainValue.getDomain().getId());
+		}
+		else {
+			return this.saveDomainValue(newDomainValue);
+		}
+	}
+
+	@Override
+	public DomainValue saveDomainValue(DomainValue domainValueModify) {
+		return domainValueRepository.save(domainValueModify);
 	}
 }

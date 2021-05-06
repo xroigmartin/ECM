@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 public class DomainValue {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="domain_value_id")
 	private Long domainValueId;
 	
