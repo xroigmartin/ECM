@@ -166,4 +166,26 @@ public class DomainValueApiController {
 							return domainValueDtoConverter.converToDto(domainValueService.saveDomainValue(dv));
 						}).orElseThrow(() -> new DomainValueNotFoundException(domainValueId)); 
 	}
+	
+	@PutMapping("/{domainValueId}/enable")
+	public DomainValueDto enableDomainValue(@PathVariable Long domainValueId) {
+		return changeEnableForDomainValue(domainValueId, true);
+	}
+	
+	@PutMapping("/{domainValueId}/disable")
+	public DomainValueDto disableDomainValue(@PathVariable Long domainValueId) {
+		return changeEnableForDomainValue(domainValueId, false);
+	}
+
+	private DomainValueDto changeEnableForDomainValue(Long domainValueId, boolean enable) {
+		return domainValueService.findById(domainValueId)
+								.map(dv -> {
+									if(dv.isEnable() != enable) {
+										dv.changeEnable();
+										return domainValueDtoConverter.converToDto(domainValueService.saveDomainValue(dv));
+									}
+									
+									return domainValueDtoConverter.converToDto(dv);
+								}).orElseThrow(() -> new DomainValueNotFoundException(domainValueId));
+	}
 }
