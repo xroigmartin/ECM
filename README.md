@@ -9,7 +9,7 @@ Aplicación para gestionar las tareas diarias de un centro escolar, con esta apl
 ## Módulos transversales
 Esta aplicación dispone de unos módulos transversales para ayudar en la operatividad de la aplicación, estos módulos son:
 
-* Domain: Este módulo es el responsable de gestionar los dominios de información que utiliza la aplicación para así poder mostrar el mismo tipo de información de la misma manera en cada uno de los módulos y permitiendo un fácil mantenimiento de estos.
+* [Domain](ecm/transversal/domain/domain.md): Este módulo es el responsable de gestionar los dominios de información que utiliza la aplicación para así poder mostrar el mismo tipo de información de la misma manera en cada uno de los módulos y permitiendo un fácil mantenimiento de estos.
 
 ## Sobre este repositorio
 La funcionalidad de este repositorio no sera la de contener el código de la aplicación, sino que sus funciones serán las siguientes:
