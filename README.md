@@ -22,8 +22,6 @@ La funcionalidad de este repositorio no sera la de contener el código de la apl
 Esta aplicación esta desarrollada en los siguientes lenguajes de programación:
 * [Spring Boot][url_sb_repo] 
 * [Python][url_py_repo]
-* [SQL][url_sql_repo]
 
 [url_sb_repo]: https://github.com/xroigmartin/ecm_spring_boot
 [url_py_repo]: https://github.com/xroigmartin/ecm_python
-[url_sql_repo]: https://github.com/xroigmartin/ecm_sql
